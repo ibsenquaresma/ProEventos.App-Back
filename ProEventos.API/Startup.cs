@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using ProEventos.API.Data;
-using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using ProEventos.Application.Contratos;
+using ProEventos.Application;
+using ProEventos.Persistence;
+using ProEventos.Persistence.Contextos;
+using ProEventos.Persistence.Contratos;
+using System.Text.Json.Serialization;
 
 namespace ProEventos.API
 {
@@ -18,13 +21,28 @@ namespace ProEventos.API
         public void ConfigureServices(IServiceCollection services)
         {
             // Adicionado referencia do DATA CONTEXT - *Curso
-            services.AddDbContext<DataContext>(options =>
+            services.AddDbContext<ProEventosContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
             //
 
-            services.AddControllers();
+            services.AddControllers()
+                                .AddJsonOptions(options =>
+                                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
+                                )
+                                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling =
+                                    Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                                );
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            //Service
+            services.AddScoped<IEventoService, EventoService>();
+
+            //Persist
+            services.AddScoped<IGeralPersist, GeralPersist>();
+            services.AddScoped<IEventoPersist, EventoPersist>();
+
             services.AddCors();
             services.AddSwaggerGen(c =>
             {
