@@ -18,9 +18,4 @@
     <ProjectReference Include="..\ProEventos.Persistence\ProEventos.Persistence.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dtos\" />
-    <Folder Include="Helpers\" />
-  </ItemGroup>
-
 </Project>
