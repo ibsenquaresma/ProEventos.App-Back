@@ -36,7 +36,7 @@ namespace ProEventos.Application.Dtos
 
         public IEnumerable<LoteDto> Lotes { get; set; }
         public IEnumerable<RedeSocialDto> RedesSociais { get; set; }
-        public IEnumerable<PalestranteDto> Palestrantes { get; set; }
+        public IEnumerable<PalestranteDto>? Palestrantes { get; set; }
 
     }
 }
