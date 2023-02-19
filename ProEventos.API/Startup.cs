@@ -6,6 +6,8 @@ using ProEventos.Persistence;
 using ProEventos.Persistence.Contextos;
 using ProEventos.Persistence.Contratos;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.FileProviders;
+using ProEventos.Api.Helpers;
 
 namespace ProEventos.API
 {
@@ -39,6 +41,7 @@ namespace ProEventos.API
             //Service
             services.AddScoped<IEventoService, EventoService>();
             services.AddScoped<ILoteService, LoteService>();
+            services.AddScoped<IUtil, Util>();
 
             //Persist
             services.AddScoped<IGeralPersist, GeralPersist>();
@@ -72,6 +75,13 @@ namespace ProEventos.API
                       .AllowAnyMethod()
                       .AllowAnyOrigin()
             );
+
+            //Upload Files
+            app.UseStaticFiles(new StaticFileOptions() { 
+            
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Resources")),
+                RequestPath = new PathString("/Resources")
+            });
 
             app.UseEndpoints(endpoints =>
             {
