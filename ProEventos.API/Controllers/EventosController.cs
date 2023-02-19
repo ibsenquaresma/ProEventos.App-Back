@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProEventos.Api.Helpers;
 using ProEventos.Application.Contratos;
 using ProEventos.Application.Dtos;
 using ProEventos.Persistence.Contextos;
@@ -11,11 +12,19 @@ public class EventosController : ControllerBase
 {
     private readonly ProEventosContext _context;
     private readonly IEventoService _eventoService;
+    private readonly IUtil _util;
 
-    public EventosController(ProEventosContext context, IEventoService eventoService)
+    private readonly string _destino = "Images";
+
+
+    public EventosController(ProEventosContext context, 
+                             IEventoService eventoService, 
+                             IUtil util
+                             )
     {
         _context = context;
         _eventoService = eventoService;
+        _util = util;
     }
 
     [HttpGet]
@@ -47,6 +56,31 @@ public class EventosController : ControllerBase
         catch (Exception ex)
         {
             return this.StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPost("upload-image/{eventoId}")]
+    public async Task<IActionResult> UploadImage(int eventoId)
+    {
+        try
+        {
+            var evento = await _eventoService.GetEventoByIdAsync(eventoId, true);
+            if (evento == null) return NoContent();
+
+            var file = Request.Form.Files[0];
+            if (file.Length > 0)
+            {
+                _util.DeleteImage(evento.ImagemURL, _destino);
+                evento.ImagemURL = await _util.SaveImage(file, _destino);
+            }
+            var EventoRetorno = await _eventoService.UpdateEvento(eventoId, evento);
+
+            return Ok(EventoRetorno);
+        }
+        catch (Exception ex)
+        {
+            return this.StatusCode(StatusCodes.Status500InternalServerError,
+                $"Erro ao tentar adicionar eventos. Erro: {ex.Message}");
         }
     }
 
@@ -94,6 +128,7 @@ public class EventosController : ControllerBase
 
             if (await _eventoService.DeleteEvento(id))
             {
+                _util.DeleteImage(evento.ImagemURL, _destino);
                 return Ok(new { message = "Deletado" });
             }
             else
