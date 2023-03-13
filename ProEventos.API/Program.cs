@@ -21,8 +21,6 @@ namespace ProEventos.API
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-
                 });
-
     }
 }
