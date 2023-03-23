@@ -23,18 +23,18 @@ namespace ProEventos.Application.Dtos
 
         [RegularExpression(@".*\.(gif|jpe?g|bmp|png)$",
                            ErrorMessage = "Não é uma imagem válida. (gif, jpg, jpeg, bmp ou png)")]
-        public string ImagemURL { get; set; }
+        public string? ImagemURL { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [Phone(ErrorMessage = "O campo {0} está com número inválido")]
-        public string Telefone { get; set; }
+        public string? Telefone { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [Display(Name = "e-mail")]
         [EmailAddress(ErrorMessage = "É necessário ser um {0} válido")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         public int UserId { get; set; }
-        public UserDto userDto { get; set; }
+        public UserDto? userDto { get; set; }
 
         public IEnumerable<LoteDto>? Lotes { get; set; }
         public IEnumerable<RedeSocialDto>? RedesSociais { get; set; }
