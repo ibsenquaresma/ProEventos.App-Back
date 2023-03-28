@@ -9,7 +9,6 @@ using System.Text.Json.Serialization;
 using Microsoft.Extensions.FileProviders;
 using ProEventos.Api.Helpers;
 using ProEventos.Domain.Identity;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -80,13 +79,17 @@ namespace ProEventos.API
             services.AddScoped<IUtil, Util>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAccountService, AccountService>();
-
+            services.AddScoped<IPalestranteService, PalestranteService>();
+            services.AddScoped<IRedeSocialService, RedeSocialService>();
 
             //Persist
             services.AddScoped<IGeralPersist, GeralPersist>();
             services.AddScoped<IEventoPersist, EventoPersist>();
             services.AddScoped<ILotePersist, LotePersist>();
             services.AddScoped<IUserPersist, UserPersist>();
+            services.AddScoped<IPalestrantePersist, PalestrantePersist>();
+            services.AddScoped<IRedeSocialPersist, RedeSocialPersist>();
+
 
 
             services.AddCors();
